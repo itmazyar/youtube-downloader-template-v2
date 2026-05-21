@@ -423,7 +423,8 @@ jobs:
               # ⭐ Use simple fixed name for zipping
               SIMPLE_FILE="video.${EXT}"
               cp "$FILE" "$(dirname "$FILE")/${SIMPLE_FILE}"
-              FILE="$(dirname "$FILE")/${SIMPLE_FILE}"
+              ZIP_INPUT="$(dirname "$FILE")/${SIMPLE_FILE}"
+              
               FINAL_FOLDER=$(get_unique_folder "download")
               FINAL_PATH="$BACKUP_DIR/$FINAL_FOLDER"
               mkdir -p "$FINAL_PATH"
@@ -435,9 +436,9 @@ jobs:
                 
                 cd "$FINAL_PATH"
                 if [ -n "$ZIP_PASSWORD" ]; then
-                    7z a -tzip -v${SPLIT_SIZE_MB}m -p"${ZIP_PASSWORD}" -mx=0 "video.zip" "$FILE" > /dev/null 2>&1
+                    7z a -tzip -v${SPLIT_SIZE_MB}m -p"${ZIP_PASSWORD}" -mx=0 "video.zip" "$ZIP_INPUT" > /dev/null 2>&1
                 else
-                    7z a -tzip -v${SPLIT_SIZE_MB}m -mx=0 "video.zip" "$FILE" > /dev/null 2>&1
+                    7z a -tzip -v${SPLIT_SIZE_MB}m -mx=0 "video.zip" "$ZIP_INPUT" > /dev/null 2>&1
                 fi
                 
                 PART_NUM=1
@@ -450,9 +451,9 @@ jobs:
                 generate_readme "$FINAL_PATH" "$FILENAME_NO_EXT" "$URL" "$QUALITY" "split" "$ZIP_PASSWORD" "$FOLDER_ENCODED" "$REPO_OWNER" "$REPO_NAME" "$BRANCH"
               else
                 if [ -n "$ZIP_PASSWORD" ]; then
-                    7z a -tzip -p"${ZIP_PASSWORD}" -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "$FILE" > /dev/null 2>&1
+                    7z a -tzip -p"${ZIP_PASSWORD}" -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "$ZIP_INPUT" > /dev/null 2>&1
                 else
-                    7z a -tzip -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "$FILE" > /dev/null 2>&1
+                    7z a -tzip -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "$ZIP_INPUT" > /dev/null 2>&1
                 fi
                 generate_readme "$FINAL_PATH" "$FILENAME_NO_EXT" "$URL" "$QUALITY" "single" "" "$FOLDER_ENCODED" "$REPO_OWNER" "$REPO_NAME" "$BRANCH"
               fi
