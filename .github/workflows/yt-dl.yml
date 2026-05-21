@@ -405,10 +405,14 @@ jobs:
                 continue
               fi
               
+              # ⭐ Use simple fixed name for zipping
+              SIMPLE_FILE="video.${EXT}"
+              cp "$FILE" "$(dirname "$FILE")/${SIMPLE_FILE}"
+              ZIP_INPUT="$(dirname "$FILE")/${SIMPLE_FILE}"
+              
               FINAL_FOLDER=$(get_unique_folder "$FILENAME_NO_EXT")
               FINAL_PATH="$BACKUP_DIR/$FINAL_FOLDER"
               mkdir -p "$FINAL_PATH"
-              
               # Thumbnail
               THUMB_FILE=$(ls "$TMP_DIR"/*.jpg 2>/dev/null | head -1)
               [ -z "$THUMB_FILE" ] && THUMB_FILE="/tmp/saved_thumb_${URL_INDEX}.jpg"
@@ -419,15 +423,6 @@ jobs:
               
               echo "${FILENAME_NO_EXT}|${FINAL_FOLDER}" >> /tmp/video_info.txt
               FOLDER_ENCODED=$(urlencode "$FINAL_FOLDER")
-              
-              # ⭐ Use simple fixed name for zipping
-              SIMPLE_FILE="video.${EXT}"
-              cp "$FILE" "$(dirname "$FILE")/${SIMPLE_FILE}"
-              ZIP_INPUT="$(dirname "$FILE")/${SIMPLE_FILE}"
-              
-              FINAL_FOLDER=$(get_unique_folder "download")
-              FINAL_PATH="$BACKUP_DIR/$FINAL_FOLDER"
-              mkdir -p "$FINAL_PATH"
               
               echo "  📦 ${SIMPLE_FILE} ($(( SIZE / 1024 / 1024 ))MB)"
               
