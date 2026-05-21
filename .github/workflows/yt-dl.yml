@@ -153,11 +153,11 @@ jobs:
           case "${YT_QUALITY}" in
             audio) FORMAT="bestaudio/bestaudio*/best" ;;
             best) FORMAT="bestvideo+bestaudio/bestvideo*+bestaudio*/best" ;;
-            2160|4k) FORMAT="bestvideo[height<=2160]+bestaudio/bestvideo[height<=2160]*+bestaudio*/bestvideo+bestaudio/best" ;;
-            1440|2k) FORMAT="bestvideo[height<=1440]+bestaudio/bestvideo[height<=1440]*+bestaudio*/bestvideo+bestaudio/best" ;;
-            1080) FORMAT="bestvideo[height<=1080]+bestaudio/bestvideo[height<=1080]*+bestaudio*/bestvideo+bestaudio/best" ;;
-            720) FORMAT="bestvideo[height<=720]+bestaudio/bestvideo[height<=720]*+bestaudio*/bestvideo+bestaudio/best" ;;
-            480) FORMAT="bestvideo[height<=480]+bestaudio/bestvideo[height<=480]*+bestaudio*/bestvideo+bestaudio/best" ;;
+            2160|4k) FORMAT="bestvideo[height<=2160]+bestaudio/bestvideo[height<=2160]*+bestaudio*/bestvideo[height<=2160]+bestaudio/best[height<=2160]" ;;
+            1440|2k) FORMAT="bestvideo[height<=1440]+bestaudio/bestvideo[height<=1440]*+bestaudio*/bestvideo[height<=1440]+bestaudio/best[height<=1440]" ;;
+            1080) FORMAT="bestvideo[height<=1080]+bestaudio/bestvideo[height<=1080]*+bestaudio*/bestvideo[height<=1080]+bestaudio/best[height<=1080]" ;;
+            720) FORMAT="bestvideo[height<=720]+bestaudio/bestvideo[height<=720]*+bestaudio*/bestvideo[height<=720]+bestaudio/best[height<=720]" ;;
+            480) FORMAT="bestvideo[height<=480]+bestaudio/bestvideo[height<=480]*+bestaudio*/bestvideo[height<=480]+bestaudio/best[height<=480]" ;;
             *) FORMAT="bestvideo+bestaudio/bestvideo*+bestaudio*/best" ;;
           esac
           
