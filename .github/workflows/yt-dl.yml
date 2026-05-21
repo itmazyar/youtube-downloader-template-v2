@@ -433,29 +433,26 @@ jobs:
               if [ "$SIZE" -gt "$SPLIT_BYTES" ]; then
                 echo "  📦 Splitting (${SPLIT_SIZE_MB}MB parts)..."
                 
-                ZIP_FULL="${FINAL_PATH}/${FINAL_FOLDER}.full.zip"
+                cd "$FINAL_PATH"
                 if [ -n "$ZIP_PASSWORD" ]; then
-                    cd "$(dirname "$FILE")" && zip -0 -j -P "${ZIP_PASSWORD}" "$ZIP_FULL" "${SIMPLE_FILE}" > /dev/null 2>&1
+                    7z a -tzip -v${SPLIT_SIZE_MB}m -p"${ZIP_PASSWORD}" -mx=0 "video.zip" "$FILE" > /dev/null 2>&1
                 else
-                    cd "$(dirname "$FILE")" && zip -0 -j "$ZIP_FULL" "${SIMPLE_FILE}" > /dev/null 2>&1
+                    7z a -tzip -v${SPLIT_SIZE_MB}m -mx=0 "video.zip" "$FILE" > /dev/null 2>&1
                 fi
                 
-                cd "$FINAL_PATH" && split -b ${SPLIT_SIZE_MB}m -d "$ZIP_FULL" "${FINAL_FOLDER}.part"
-                rm "$ZIP_FULL"
-                
-                for PART_FILE in "$FINAL_PATH"/*.part*; do
-                    PART_NUM=$(echo "$PART_FILE" | grep -oE 'part[0-9]+$' | grep -oE '[0-9]+')
-                    NEW_NUM=$(printf "%02d" $((10#$PART_NUM + 1)))
-                    mv "$PART_FILE" "${FINAL_PATH}/${FINAL_FOLDER}.part${NEW_NUM}.zip"
+                PART_NUM=1
+                for PART in video.zip.*; do
+                    mv "$PART" "${FINAL_FOLDER}.part$(printf "%02d" $PART_NUM).zip"
+                    PART_NUM=$((PART_NUM + 1))
                 done
                 
                 echo "  ✅ Split: ${FINAL_FOLDER}.part01.zip ~ .partXX.zip"
                 generate_readme "$FINAL_PATH" "$FILENAME_NO_EXT" "$URL" "$QUALITY" "split" "$ZIP_PASSWORD" "$FOLDER_ENCODED" "$REPO_OWNER" "$REPO_NAME" "$BRANCH"
               else
                 if [ -n "$ZIP_PASSWORD" ]; then
-                    cd "$(dirname "$FILE")" && zip -0 -j -P "${ZIP_PASSWORD}" "${FINAL_PATH}/${FINAL_FOLDER}.zip" "${SIMPLE_FILE}" > /dev/null 2>&1
+                    cd "$(dirname "$FILE")" && 7z a -tzip -p"${ZIP_PASSWORD}" -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "${SIMPLE_FILE}" > /dev/null 2>&1
                 else
-                    cd "$(dirname "$FILE")" && zip -0 -j "${FINAL_PATH}/${FINAL_FOLDER}.zip" "${SIMPLE_FILE}" > /dev/null 2>&1
+                    cd "$(dirname "$FILE")" && 7z a -tzip -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "${SIMPLE_FILE}" > /dev/null 2>&1
                 fi
                 generate_readme "$FINAL_PATH" "$FILENAME_NO_EXT" "$URL" "$QUALITY" "single" "" "$FOLDER_ENCODED" "$REPO_OWNER" "$REPO_NAME" "$BRANCH"
               fi
