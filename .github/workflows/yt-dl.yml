@@ -420,9 +420,9 @@ jobs:
               echo "${FILENAME_NO_EXT}|${FINAL_FOLDER}" >> /tmp/video_info.txt
               FOLDER_ENCODED=$(urlencode "$FINAL_FOLDER")
               
-              # ⭐ Rename to simple name before zipping
+              # ⭐ Use simple fixed name for zipping
               SIMPLE_FILE="video.${EXT}"
-              mv "$FILE" "$(dirname "$FILE")/${SIMPLE_FILE}"
+              cp "$FILE" "$(dirname "$FILE")/${SIMPLE_FILE}"
               FILE="$(dirname "$FILE")/${SIMPLE_FILE}"
               FINAL_FOLDER=$(get_unique_folder "download")
               FINAL_PATH="$BACKUP_DIR/$FINAL_FOLDER"
@@ -450,9 +450,9 @@ jobs:
                 generate_readme "$FINAL_PATH" "$FILENAME_NO_EXT" "$URL" "$QUALITY" "split" "$ZIP_PASSWORD" "$FOLDER_ENCODED" "$REPO_OWNER" "$REPO_NAME" "$BRANCH"
               else
                 if [ -n "$ZIP_PASSWORD" ]; then
-                    cd "$(dirname "$FILE")" && 7z a -tzip -p"${ZIP_PASSWORD}" -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "${SIMPLE_FILE}" > /dev/null 2>&1
+                    7z a -tzip -p"${ZIP_PASSWORD}" -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "$FILE" > /dev/null 2>&1
                 else
-                    cd "$(dirname "$FILE")" && 7z a -tzip -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "${SIMPLE_FILE}" > /dev/null 2>&1
+                    7z a -tzip -mx=0 "${FINAL_PATH}/${FINAL_FOLDER}.zip" "$FILE" > /dev/null 2>&1
                 fi
                 generate_readme "$FINAL_PATH" "$FILENAME_NO_EXT" "$URL" "$QUALITY" "single" "" "$FOLDER_ENCODED" "$REPO_OWNER" "$REPO_NAME" "$BRANCH"
               fi
